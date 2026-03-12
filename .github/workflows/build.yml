@@ -1,4 +1,4 @@
-name: Build iOS IPA
+name: Build IPA
 
 on:
   push:
@@ -9,14 +9,17 @@ jobs:
     runs-on: macos-latest
 
     steps:
-      - name: Checkout
-        uses: actions/checkout@v4
+      - uses: actions/checkout@v4
 
       - name: Select Xcode
         run: sudo xcode-select -s /Applications/Xcode.app
 
+      - name: Go to project folder
+        run: cd WIX
+
       - name: Build archive
         run: |
+          cd WIX
           mkdir -p build
 
           xcodebuild \
@@ -30,15 +33,16 @@ jobs:
             CODE_SIGNING_REQUIRED=NO \
             CODE_SIGN_IDENTITY=""
 
-      - name: Create IPA manually
+      - name: Create IPA
         run: |
+          cd WIX
           mkdir Payload
           cp -r build/WIX.xcarchive/Products/Applications/WIX.app Payload/
           zip -r WIX.ipa Payload
           rm -rf Payload
 
-      - name: Upload artifact
+      - name: Upload IPA
         uses: actions/upload-artifact@v4
         with:
-          name: WIX-ipa
-          path: WIX.ipa
+          name: WIX-IPA
+          path: WIX/WIX.ipa
