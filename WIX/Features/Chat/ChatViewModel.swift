@@ -1,3 +1,4 @@
+import SwiftUI
 import Foundation
 import PhotosUI
 import UIKit
@@ -72,8 +73,10 @@ final class ChatViewModel: ObservableObject {
                     modelName: config.modelName,
                     mode: config.selectedMode
                 ) { [weak self] delta in
-                    self?.appendStreamingText(delta, to: assistantPlaceholder.id)
-                }
+    await MainActor.run {
+        self?.appendStreamingText(delta, to: assistantPlaceholder.id)
+    }
+}
                 self.finishStreamingMessage(id: assistantPlaceholder.id)
                 Haptics.success()
             } catch is CancellationError {
