@@ -11,15 +11,14 @@ jobs:
     steps:
       - uses: actions/checkout@v4
 
-      - name: Select Xcode
-        run: sudo xcode-select -s /Applications/Xcode.app
+      - name: Install XcodeGen
+        run: brew install xcodegen
 
-      - name: Go to project folder
-        run: cd WIX
+      - name: Generate Xcode project
+        run: xcodegen generate
 
       - name: Build archive
         run: |
-          cd WIX
           mkdir -p build
 
           xcodebuild \
@@ -33,9 +32,8 @@ jobs:
             CODE_SIGNING_REQUIRED=NO \
             CODE_SIGN_IDENTITY=""
 
-      - name: Create IPA
+      - name: Create unsigned IPA
         run: |
-          cd WIX
           mkdir Payload
           cp -r build/WIX.xcarchive/Products/Applications/WIX.app Payload/
           zip -r WIX.ipa Payload
@@ -45,4 +43,4 @@ jobs:
         uses: actions/upload-artifact@v4
         with:
           name: WIX-IPA
-          path: WIX/WIX.ipa
+          path: WIX.ipa
