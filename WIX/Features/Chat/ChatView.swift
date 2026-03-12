@@ -75,14 +75,14 @@ struct ChatView: View {
             }
             Button("Peruuta", role: .cancel) { }
         }
-        .onChange(of: selectedPhotoItems.count) { _, newCount in
-            guard newCount > 0 else { return }
-            let items = selectedPhotoItems
-            Task {
-                await viewModel.addPhotos(from: items)
-                selectedPhotoItems.removeAll()
-            }
-        }
+        .onChange(of: selectedPhotoItems) { newItems in
+    guard !newItems.isEmpty else { return }
+
+    Task {
+        await viewModel.addPhotos(from: newItems)
+        selectedPhotoItems.removeAll()
+    }
+}
         .alert("Virhe", isPresented: Binding(
             get: { viewModel.errorMessage != nil },
             set: { newValue in
