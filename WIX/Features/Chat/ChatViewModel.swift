@@ -67,13 +67,13 @@ final class ChatViewModel: ObservableObject {
             guard let self else { return }
             do {
                 let _ = try await api.streamReply(
-                    history: historySnapshot,
-                    currentUserMessage: userMessage,
-                    apiKey: config.apiKey,
-                    modelName: config.modelName,
-                    mode: config.selectedMode
-                ) { [weak self] delta in
-    await MainActor.run {
+    history: historySnapshot,
+    currentUserMessage: userMessage,
+    apiKey: config.apiKey,
+    modelName: config.modelName,
+    mode: config.selectedMode
+) { [weak self] delta in
+    Task { @MainActor in
         self?.appendStreamingText(delta, to: assistantPlaceholder.id)
     }
 }
