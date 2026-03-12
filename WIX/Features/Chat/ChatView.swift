@@ -44,17 +44,7 @@ struct ChatView: View {
                 viewModel.errorMessage = error.localizedDescription
             }
         }
-        PhotosPicker(
-    selection: $selectedPhotoItems,
-    maxSelectionCount: 6,
-    matching: .images
-) {
-    EmptyView()
-}
-            .labelsHidden()
-            .frame(width: 0, height: 0)
-            .opacity(0.001)
-        }
+        
         .confirmationDialog("Lisää sisältöä", isPresented: $isShowingAttachmentOptions, titleVisibility: .visible) {
             PhotosPicker(
     selection: $selectedPhotoItems,
